@@ -19,7 +19,6 @@
     padding-bottom:40px;
   }
 
-  /* ---------- header ---------- */
   header{
     display:flex; align-items:baseline; gap:16px;
     padding:14px 16px; border-bottom:2px solid var(--line);
@@ -31,7 +30,6 @@
   }
   header .note{ color:var(--muted); font-size:12px; }
 
-  /* ---------- sections ---------- */
   .sec{ border-bottom:1px solid var(--line); }
   .sec-head{
     display:flex; align-items:center; justify-content:space-between;
@@ -73,7 +71,6 @@
     text-underline-offset:3px;
   }
 
-  /* ---------- canvas wraps ---------- */
   .canvas-wrap{
     margin:14px 16px 0;
     border:1px solid var(--soft);
@@ -90,7 +87,6 @@
     outline:none;
   }
 
-  /* ---------- filter bar ---------- */
   .filter-bar{
     display:flex; flex-wrap:wrap; gap:14px 22px;
     padding:10px 16px;
@@ -119,7 +115,6 @@
     min-width:38px; text-align:right;
   }
 
-  /* ---------- range inputs ---------- */
   input[type="range"]{
     -webkit-appearance:none; appearance:none;
     flex:1 1 auto; height:4px; background:var(--soft);
@@ -141,7 +136,6 @@
   }
   input[type="range"]::-moz-range-thumb:hover{ background:var(--accent); }
 
-  /* ---------- picked bar ---------- */
   .picked-bar{
     display:flex; flex-wrap:wrap; align-items:center; gap:10px;
     padding:12px 16px;
@@ -171,7 +165,6 @@
     font-size:12px; letter-spacing:1px;
   }
 
-  /* ---------- mini buttons ---------- */
   .mini{
     border:1px solid var(--line); background:#fff; color:var(--fg);
     font:inherit; font-size:11px; letter-spacing:1px;
@@ -183,7 +176,6 @@
   .mini.alt:hover{ background:var(--accent); border-color:var(--accent); color:#fff; }
   .mini:disabled{ opacity:.35; cursor:not-allowed; background:#fff; color:var(--fg); }
 
-  /* ---------- stop rows ---------- */
   .stops{ background:#fff; }
   .stop{
     display:flex; align-items:stretch;
@@ -273,7 +265,6 @@
   }
   select:hover{ background:var(--hover); }
 
-  /* ---------- mode tabs ---------- */
   .tabs{
     display:flex; background:#fff;
     border-bottom:1px solid var(--line);
@@ -295,7 +286,6 @@
     color:var(--fg); border-bottom-color:var(--accent); font-weight:700;
   }
 
-  /* ---------- stage ---------- */
   .stage{
     margin:14px 16px;
     border:1px solid var(--soft);
@@ -314,7 +304,6 @@
   #gradCanvas.radial-mode{ cursor:grab; }
   #gradCanvas.radial-mode:active{ cursor:grabbing; }
 
-  /* ---------- mode controls ---------- */
   .mode-ctrl{
     display:none; align-items:center; gap:12px; flex-wrap:wrap;
     padding:10px 16px;
@@ -328,7 +317,27 @@
   }
   .mode-ctrl input[type="range"]{ flex:1 1 120px; }
 
-  /* ---------- CSS output ---------- */
+  /* ---------- overlay controls ---------- */
+  .overlay-bg{
+    -webkit-appearance:none; appearance:none;
+    width:34px; height:24px; flex:0 0 auto;
+    border:1px solid var(--line);
+    padding:0; cursor:pointer; background:transparent;
+  }
+  .overlay-bg::-webkit-color-swatch-wrapper{ padding:0; }
+  .overlay-bg::-webkit-color-swatch{ border:0; border-radius:0 !important; }
+  .overlay-bg::-moz-color-swatch{ border:0; border-radius:0 !important; }
+
+  .overlay-sliders{
+    display:flex; align-items:center; gap:8px; flex-wrap:wrap;
+    flex:1 1 100%;
+    padding-top:8px;
+    border-top:1px dashed var(--soft);
+    margin-top:4px;
+  }
+  .overlay-sliders .ctrl-name{ min-width:auto; }
+  .overlay-sliders input[type="range"]{ flex:1 1 100px; min-width:80px; }
+
   .css-out{
     display:flex; align-items:flex-start; gap:10px;
     padding:12px 16px;
@@ -345,7 +354,6 @@
     min-height:36px;
   }
 
-  /* ---------- history ---------- */
   .history{
     display:flex; flex-wrap:wrap; gap:8px;
     padding:14px 16px;
@@ -374,7 +382,6 @@
     text-transform:uppercase;
   }
 
-  /* ---------- lens (overrides square rule) ---------- */
   .lens{
     position:fixed; left:0; top:0;
     width:180px; height:180px;
@@ -403,7 +410,6 @@
 
   .hidden{ display:none !important; }
 
-  /* ---------- toast ---------- */
   #toast{
     position:fixed; left:50%; bottom:24px;
     transform:translate(-50%, 20px);
@@ -419,7 +425,6 @@
   }
   #toast.show{ opacity:1; transform:translate(-50%, 0); }
 
-  /* ---------- small screens ---------- */
   @media (max-width:520px){
     .stop-label{ display:none; }
     .drag-handle{ flex-basis:28px; }
@@ -514,6 +519,7 @@
     <button type="button" data-mode="default" class="active">default</button>
     <button type="button" data-mode="advanced">advanced</button>
     <button type="button" data-mode="radial">radial</button>
+    <button type="button" data-mode="overlay">overlay</button>
     <button type="button" data-mode="stepper">stepper</button>
     <button type="button" data-mode="mirror">mirror</button>
   </nav>
@@ -531,8 +537,25 @@
   <div class="mode-ctrl" data-mode="radial">
     <button class="mini" id="resetView" type="button">reset view</button>
     <span class="ctrl-name">lens</span>
-    <input type="range" id="lensZoom" min="2" max="16" value="8">
-    <span class="mono" id="lensZoomVal">8×</span>
+    <input type="range" class="lens-zoom" min="2" max="16" value="8" style="flex:0 1 120px">
+    <span class="mono lens-zoom-val">8×</span>
+  </div>
+
+  <div class="mode-ctrl" data-mode="overlay">
+    <span class="ctrl-name">bg</span>
+    <input type="color" id="overlayBg" class="overlay-bg" value="#ffffff" title="background color">
+    <span class="ctrl-name" id="overlaySelLabel">no circle selected</span>
+    <span class="ctrl-name">lens</span>
+    <input type="range" class="lens-zoom" min="2" max="16" value="8" style="flex:0 1 100px">
+    <span class="mono lens-zoom-val">8×</span>
+    <div class="overlay-sliders" id="overlaySliders" style="display:none">
+      <span class="ctrl-name">opacity</span>
+      <input type="range" id="overlayOpacity" min="0" max="100" value="75">
+      <span class="mono" id="overlayOpacityVal">75%</span>
+      <span class="ctrl-name">size</span>
+      <input type="range" id="overlaySize" min="20" max="300" value="90">
+      <span class="mono" id="overlaySizeVal">90px</span>
+    </div>
   </div>
 
   <div class="picked-bar">
@@ -653,7 +676,10 @@ async function readClipboard() {
    State
    ========================================================= */
 let colors  = ['#ff5f6d', '#ffc371'];
-let nodes   = [];
+let nodes   = [];              // radial world positions
+let overlayNodes = [];         // overlay: { fx, fy, radius, opacity }
+let overlayBg = '#ffffff';
+let selectedOverlayIndex = -1;
 let history = [];
 let mode    = 'default';
 let steps   = 8;
@@ -968,6 +994,28 @@ function syncNodeCount() {
   if (nodes.length > colors.length) nodes.length = colors.length;
 }
 
+function syncOverlayNodes() {
+  while (overlayNodes.length < colors.length) {
+    const i = overlayNodes.length;
+    const total = Math.max(colors.length, 1);
+    const ang = (i / total) * Math.PI * 2 - Math.PI / 2;
+    overlayNodes.push({
+      fx: 0.5 + Math.cos(ang) * 0.22,
+      fy: 0.5 + Math.sin(ang) * 0.22,
+      radius: 90,
+      opacity: 0.75
+    });
+  }
+  if (overlayNodes.length > colors.length) {
+    overlayNodes.length = colors.length;
+  }
+  if (selectedOverlayIndex >= colors.length) {
+    selectedOverlayIndex = -1;
+    $('#overlaySliders').style.display = 'none';
+    $('#overlaySelLabel').textContent = 'no circle selected';
+  }
+}
+
 function renderStops() {
   stopsEl.innerHTML = '';
 
@@ -1036,6 +1084,12 @@ function renderStops() {
       if (colors.length <= 2) return;
       colors.splice(i, 1);
       if (nodes.length) nodes.splice(i, 1);
+      if (overlayNodes.length) overlayNodes.splice(i, 1);
+      if (selectedOverlayIndex === i) {
+        deselectOverlayNode();
+      } else if (selectedOverlayIndex > i) {
+        selectedOverlayIndex--;
+      }
       renderStops();
       drawGradient();
       updateCss();
@@ -1092,14 +1146,25 @@ function clearDropMarks() {
 function moveColor(from, insert) {
   if (from === insert || from === insert - 1) return;
   const hadNodes = nodes.length === colors.length;
+  const hadOverlay = overlayNodes.length === colors.length;
 
   const [c] = colors.splice(from, 1);
-  let n = null;
+  let n = null, o = null;
   if (hadNodes) [n] = nodes.splice(from, 1);
+  if (hadOverlay) [o] = overlayNodes.splice(from, 1);
 
   if (from < insert) insert--;
   colors.splice(insert, 0, c);
   if (n) nodes.splice(insert, 0, n);
+  if (o) overlayNodes.splice(insert, 0, o);
+
+  if (selectedOverlayIndex === from) {
+    selectedOverlayIndex = insert;
+  } else if (from < selectedOverlayIndex && insert >= selectedOverlayIndex) {
+    selectedOverlayIndex--;
+  } else if (from > selectedOverlayIndex && insert <= selectedOverlayIndex) {
+    selectedOverlayIndex++;
+  }
 }
 
 addBtn.addEventListener('click', () => {
@@ -1116,6 +1181,7 @@ addBtn.addEventListener('click', () => {
   }
   colors.push(next);
   syncNodeCount();
+  syncOverlayNodes();
   renderStops();
   drawGradient();
   updateCss();
@@ -1131,7 +1197,7 @@ function canvasSize() {
   let w = gradCanvas.clientWidth;
   if (!w) w = (gradCanvas.parentElement.clientWidth || 400);
   w = Math.max(240, Math.round(w));
-  const h = mode === 'radial' ? 340 : 180;
+  const h = (mode === 'radial' || mode === 'overlay') ? 340 : 180;
   return { w, h };
 }
 
@@ -1173,12 +1239,13 @@ function drawGradient() {
   gradCtx.clearRect(0, 0, w, h);
 
   if (mode === 'radial')       drawRadial(w, h);
+  else if (mode === 'overlay') drawOverlay(w, h);
   else if (mode === 'stepper') drawStepper(w, h);
   else if (mode === 'advanced')drawAdvanced(w, h);
   else if (mode === 'mirror')  drawMirror(w, h);
   else                         drawDefault(w, h);
 
-  if (mode !== 'radial' && gradMarker) {
+  if (mode !== 'radial' && mode !== 'overlay' && gradMarker) {
     const mx = gradMarker.fx * w;
     const my = gradMarker.fy * h;
 
@@ -1251,6 +1318,69 @@ function drawStepper(w, h) {
   }
 
   gradCtx.restore();
+}
+
+/* ---------- overlay ---------- */
+function drawOverlay(w, h) {
+  // background
+  gradCtx.fillStyle = overlayBg;
+  gradCtx.fillRect(0, 0, w, h);
+
+  // circles (drawn in order, last on top)
+  overlayNodes.forEach((n, i) => {
+    if (i >= colors.length) return;
+    const cx = n.fx * w;
+    const cy = n.fy * h;
+
+    gradCtx.globalAlpha = n.opacity;
+    gradCtx.fillStyle = colors[i];
+    gradCtx.beginPath();
+    gradCtx.arc(cx, cy, n.radius, 0, Math.PI * 2);
+    gradCtx.fill();
+  });
+  gradCtx.globalAlpha = 1;
+
+  // outlines + selection
+  overlayNodes.forEach((n, i) => {
+    if (i >= colors.length) return;
+    const cx = n.fx * w;
+    const cy = n.fy * h;
+    const selected = (i === selectedOverlayIndex);
+
+    // subtle outline for every circle
+    gradCtx.beginPath();
+    gradCtx.arc(cx, cy, n.radius, 0, Math.PI * 2);
+    gradCtx.lineWidth = selected ? 2.5 : 1;
+    gradCtx.strokeStyle = selected ? '#111111' : 'rgba(17,17,17,0.28)';
+    gradCtx.stroke();
+
+    if (selected) {
+      // dashed outer ring
+      gradCtx.beginPath();
+      gradCtx.arc(cx, cy, n.radius + 6, 0, Math.PI * 2);
+      gradCtx.lineWidth = 1;
+      gradCtx.setLineDash([4, 4]);
+      gradCtx.strokeStyle = '#111111';
+      gradCtx.stroke();
+      gradCtx.setLineDash([]);
+    }
+
+    // small letter badge at the top of each circle (outside the fill)
+    const lx = cx;
+    const ly = cy - n.radius - 11;
+    gradCtx.font = '700 10px ui-monospace, monospace';
+    gradCtx.textAlign = 'center';
+    gradCtx.textBaseline = 'middle';
+    const badge = String.fromCharCode(65 + i);
+    const bw = 14, bh = 12;
+    gradCtx.fillStyle = selected ? '#111111' : 'rgba(255,255,255,0.85)';
+    gradCtx.fillRect(lx - bw/2, ly - bh/2, bw, bh);
+    gradCtx.strokeStyle = selected ? '#ff3b00' : 'rgba(17,17,17,0.35)';
+    gradCtx.lineWidth = 1;
+    gradCtx.strokeRect(lx - bw/2, ly - bh/2, bw, bh);
+    gradCtx.fillStyle = selected ? '#ffffff' : '#111111';
+    gradCtx.fillText(badge, lx, ly + 0.5);
+  });
 }
 
 let radialBuf = null, radialBufCtx = null, radialImage = null;
@@ -1424,7 +1554,6 @@ function setupHoldLens(canvas, onSample, skipFn) {
   });
 }
 
-/* ---------- image sampling ---------- */
 function sampleImageAt(cssX, cssY) {
   if (!imgObj) return;
 
@@ -1469,7 +1598,7 @@ function sampleGradPixelLocal(lx, ly) {
   $('#gradSwatch').style.background = gradPickedHex;
   $('#gradHex').textContent = gradPickedHex;
 
-  if (mode !== 'radial') {
+  if (mode !== 'radial' && mode !== 'overlay') {
     gradMarker = { fx: relX, fy: relY };
     drawGradient();
   }
@@ -1477,7 +1606,7 @@ function sampleGradPixelLocal(lx, ly) {
   addHistory(gradPickedHex);
 }
 
-setupHoldLens(gradCanvas, sampleGradPixelLocal, () => mode === 'radial');
+setupHoldLens(gradCanvas, sampleGradPixelLocal, () => mode === 'radial' || mode === 'overlay');
 
 /* ---------- radial mode gestures ---------- */
 const pointers = new Map();
@@ -1677,8 +1806,156 @@ gradCanvas.addEventListener('wheel', e => {
   drawGradient();
 }, { passive: false });
 
+/* ---------- overlay mode gestures ---------- */
+let overlayDrag = null;
+
+function hitOverlayCircle(lx, ly) {
+  const r = gradCanvas.getBoundingClientRect();
+  for (let i = overlayNodes.length - 1; i >= 0; i--) {
+    const n = overlayNodes[i];
+    const cx = n.fx * r.width;
+    const cy = n.fy * r.height;
+    if (Math.hypot(lx - cx, ly - cy) <= n.radius) return i;
+  }
+  return -1;
+}
+
+function selectOverlayNode(i) {
+  if (i < 0 || i >= overlayNodes.length) return;
+  selectedOverlayIndex = i;
+  const n = overlayNodes[i];
+  const opPct = Math.round(n.opacity * 100);
+  $('#overlayOpacity').value = opPct;
+  $('#overlayOpacityVal').textContent = opPct + '%';
+  $('#overlaySize').value = Math.round(n.radius);
+  $('#overlaySizeVal').textContent = Math.round(n.radius) + 'px';
+  $('#overlaySliders').style.display = 'flex';
+  $('#overlaySelLabel').textContent = 'circle ' + String.fromCharCode(65 + i);
+  drawGradient();
+}
+
+function deselectOverlayNode() {
+  selectedOverlayIndex = -1;
+  $('#overlaySliders').style.display = 'none';
+  $('#overlaySelLabel').textContent = 'no circle selected';
+  drawGradient();
+}
+
+gradCanvas.addEventListener('pointerdown', e => {
+  if (mode !== 'overlay') return;
+  if (overlayDrag) return;
+  e.preventDefault();
+  try { gradCanvas.setPointerCapture(e.pointerId); } catch (_) {}
+
+  const pos = canvasLocal(e.clientX, e.clientY);
+  const hit = hitOverlayCircle(pos.x, pos.y);
+
+  overlayDrag = {
+    pointerId: e.pointerId,
+    startX: pos.x, startY: pos.y,
+    lastX: pos.x, lastY: pos.y,
+    index: hit,
+    moved: false,
+    lensOn: false,
+    holdTimer: null
+  };
+
+  if (hit >= 0) selectOverlayNode(hit);
+
+  overlayDrag.holdTimer = setTimeout(() => {
+    if (!overlayDrag || overlayDrag.moved) return;
+    overlayDrag.lensOn = true;
+    showLensAtLocal(gradCanvas, overlayDrag.lastX, overlayDrag.lastY);
+  }, 260);
+});
+
+gradCanvas.addEventListener('pointermove', e => {
+  if (mode !== 'overlay') return;
+  if (!overlayDrag || overlayDrag.pointerId !== e.pointerId) return;
+
+  const pos = canvasLocal(e.clientX, e.clientY);
+  overlayDrag.lastX = pos.x;
+  overlayDrag.lastY = pos.y;
+
+  if (overlayDrag.lensOn) {
+    e.preventDefault();
+    showLensAtLocal(gradCanvas, pos.x, pos.y);
+    return;
+  }
+
+  if (!overlayDrag.moved) {
+    if (Math.hypot(pos.x - overlayDrag.startX, pos.y - overlayDrag.startY) > 6) {
+      overlayDrag.moved = true;
+      if (overlayDrag.holdTimer) {
+        clearTimeout(overlayDrag.holdTimer);
+        overlayDrag.holdTimer = null;
+      }
+    }
+  }
+
+  if (overlayDrag.moved && overlayDrag.index >= 0) {
+    const r = gradCanvas.getBoundingClientRect();
+    overlayNodes[overlayDrag.index].fx = pos.x / r.width;
+    overlayNodes[overlayDrag.index].fy = pos.y / r.height;
+    drawGradient();
+  }
+});
+
+gradCanvas.addEventListener('pointerup', e => {
+  if (mode !== 'overlay') return;
+  if (!overlayDrag || overlayDrag.pointerId !== e.pointerId) return;
+
+  if (overlayDrag.holdTimer) {
+    clearTimeout(overlayDrag.holdTimer);
+    overlayDrag.holdTimer = null;
+  }
+
+  const pos = canvasLocal(e.clientX, e.clientY);
+
+  if (overlayDrag.lensOn) {
+    hideLens();
+    sampleGradPixelLocal(pos.x, pos.y);
+  } else if (!overlayDrag.moved && overlayDrag.index < 0) {
+    // tap on empty space → deselect + sample
+    if (selectedOverlayIndex >= 0) deselectOverlayNode();
+    sampleGradPixelLocal(pos.x, pos.y);
+  }
+
+  overlayDrag = null;
+});
+
+gradCanvas.addEventListener('pointercancel', e => {
+  if (mode !== 'overlay') return;
+  if (!overlayDrag || overlayDrag.pointerId !== e.pointerId) return;
+  if (overlayDrag.holdTimer) clearTimeout(overlayDrag.holdTimer);
+  if (overlayDrag.lensOn) hideLens();
+  overlayDrag = null;
+});
+
 $('#gradPick').addEventListener('click', () => {
   if (gradPickedHex) copyText(gradPickedHex);
+});
+
+/* =========================================================
+   Overlay controls
+   ========================================================= */
+$('#overlayBg').addEventListener('input', e => {
+  overlayBg = e.target.value;
+  if (mode === 'overlay') drawGradient();
+});
+
+$('#overlayOpacity').addEventListener('input', e => {
+  if (selectedOverlayIndex < 0) return;
+  overlayNodes[selectedOverlayIndex].opacity = +e.target.value / 100;
+  $('#overlayOpacityVal').textContent = e.target.value + '%';
+  drawGradient();
+});
+
+$('#overlaySize').addEventListener('input', e => {
+  if (selectedOverlayIndex < 0) return;
+  overlayNodes[selectedOverlayIndex].radius = +e.target.value;
+  $('#overlaySizeVal').textContent = e.target.value + 'px';
+  drawGradient();
 });
 
 /* =========================================================
@@ -1693,10 +1970,14 @@ function applyModeControls() {
   modeCtrls.forEach(el => {
     el.classList.toggle('active', el.dataset.mode === mode);
   });
-  gradCanvas.classList.toggle('radial-mode', mode === 'radial');
-  $('#gradHint').textContent = mode === 'radial'
-    ? 'hold to magnify · tap to sample · pinch to zoom'
-    : 'tap to sample · hold to magnify';
+  gradCanvas.classList.toggle('radial-mode', mode === 'radial' || mode === 'overlay');
+  if (mode === 'radial') {
+    $('#gradHint').textContent = 'hold to magnify · tap to sample · pinch to zoom';
+  } else if (mode === 'overlay') {
+    $('#gradHint').textContent = 'drag circles · tap to select · hold to magnify';
+  } else {
+    $('#gradHint').textContent = 'tap to sample · hold to magnify';
+  }
 }
 
 modeTabs.forEach(btn => {
@@ -1707,6 +1988,14 @@ modeTabs.forEach(btn => {
     modeTabs.forEach(b => b.classList.toggle('active', b === btn));
     hideLens();
 
+    // clear any in-flight gestures when switching
+    pointers.clear();
+    gesture = null;
+    if (overlayDrag) {
+      if (overlayDrag.holdTimer) clearTimeout(overlayDrag.holdTimer);
+      overlayDrag = null;
+    }
+
     if (mode === 'radial') {
       syncNodeCount();
       if (!radialInited) {
@@ -1714,6 +2003,8 @@ modeTabs.forEach(btn => {
         radialInited = true;
       }
       lastSize = canvasSize();
+    } else if (mode === 'overlay') {
+      syncOverlayNodes();
     }
 
     applyModeControls();
@@ -1736,13 +2027,13 @@ $('#resetView').addEventListener('click', () => {
   drawGradient();
 });
 
-const lensZoomEl  = $('#lensZoom');
-const lensZoomVal = $('#lensZoomVal');
-
-lensZoomEl.addEventListener('input', () => {
-  lensZoom = +lensZoomEl.value;
-  lensZoomVal.textContent = lensZoom + '×';
-  if (activeLens) renderLensContent();
+document.querySelectorAll('.lens-zoom').forEach(slider => {
+  slider.addEventListener('input', () => {
+    lensZoom = +slider.value;
+    document.querySelectorAll('.lens-zoom').forEach(s => s.value = lensZoom);
+    document.querySelectorAll('.lens-zoom-val').forEach(el => el.textContent = lensZoom + '×');
+    if (activeLens) renderLensContent();
+  });
 });
 
 dirSel.addEventListener('change', () => {
@@ -1758,6 +2049,19 @@ function updateCss() {
 
   if (mode === 'radial') {
     code = '/* radial field — sample the canvas to grab colors */';
+  } else if (mode === 'overlay') {
+    const parts = [];
+    overlayNodes.forEach((n, i) => {
+      if (i >= colors.length) return;
+      const rgb = hexToRgb(colors[i]);
+      const pctX = (n.fx * 100).toFixed(1);
+      const pctY = (n.fy * 100).toFixed(1);
+      const r = Math.round(rgb.r), g = Math.round(rgb.g), b = Math.round(rgb.b);
+      const a = n.opacity.toFixed(2);
+      parts.push(`radial-gradient(circle ${Math.round(n.radius)}px at ${pctX}% ${pctY}%, rgba(${r},${g},${b},${a}) 99.5%, transparent 100%)`);
+    });
+    parts.push(overlayBg);
+    code = 'background:\n  ' + parts.join(',\n  ') + ';';
   } else if (mode === 'stepper') {
     const N = steps;
     const parts = [];
@@ -1866,6 +2170,7 @@ window.addEventListener('resize', () => {
    Init
    ========================================================= */
 syncNodeCount();
+syncOverlayNodes();
 loadHistory();
 renderHistory();
 renderStops();
